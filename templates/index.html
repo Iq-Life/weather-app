@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Погодное приложение</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            min-height: 100vh;
+            color: #2d3436;
+        }
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-top: 50px;
+        }
+        h1 {
+            text-align: center;
+            color: #2d3436;
+            margin-bottom: 30px;
+        }
+        .weather-card {
+            text-align: center;
+            padding: 20px;
+        }
+        .temperature {
+            font-size: 3em;
+            font-weight: bold;
+            color: #0984e3;
+            margin: 20px 0;
+        }
+        .description {
+            font-size: 1.5em;
+            margin: 10px 0;
+        }
+        .details {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+        }
+        .detail-item {
+            text-align: center;
+        }
+        .detail-value {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        .error {
+            color: #d63031;
+            text-align: center;
+            padding: 20px;
+            background: #fab1a0;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .instructions {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background: #dfe6e9;
+            border-radius: 10px;
+        }
+        .city-name {
+            font-size: 2em;
+            color: #2d3436;
+            margin-bottom: 20px;
+        }
+        input, button {
+            padding: 10px;
+            margin: 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            background: #0984e3;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #074b83;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌤️ Погодное приложение</h1>
+        
+        {{if .Error}}
+            <div class="error">
+                <h3>❌ Ошибка</h3>
+                <p>{{.Error}}</p>
+            </div>
+        {{else if .Weather}}
+            <div class="weather-card">
+                <div class="city-name">{{.Weather.Name}}</div>
+                
+                {{if .Weather.Weather}}
+                    {{$weather := index .Weather.Weather 0}}
+                    <div class="description">
+                        {{$weather.Description}}
+                        {{if $weather.Icon}}
+                            <img src="http://openweathermap.org/img/w/{{$weather.Icon}}.png" alt="Weather icon">
+                        {{end}}
+                    </div>
+                {{end}}
+                
+                <div class="temperature">{{printf "%.1f" .Weather.Main.Temp}}°C</div>
+                
+                <div class="details">
+                    <div class="detail-item">
+                        <div class="detail-label">Влажность</div>
+                        <div class="detail-value">{{.Weather.Main.Humidity}}%</div>
+                    </div>
+                </div>
+            </div>
+        {{else}}
+            <div class="instructions">
+                <h3>Как использовать:</h3>
+                <p>Введите название города в адресной строке:</p>
+                <p><strong>http://localhost:4200/penza</strong></p>
+                <p><strong>http://localhost:4200/moscow</strong></p>
+                <p><strong>http://localhost:4200/london</strong></p>
+                <p>Или введите город ниже для тестирования:</p>
+                <input type="text" id="cityInput" placeholder="Введите город">
+                <button onclick="goToCity()">Показать погоду</button>
+            </div>
+        {{end}}
+    </div>
+
+    <script>
+        function goToCity() {
+            const city = document.getElementById('cityInput').value.trim();
+            if (city) {
+                window.location.href = '/' + city.toLowerCase().replace(/ /g, '-');
+            }
+        }
+        
+        document.getElementById('cityInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                goToCity();
+            }
+        });
+    </script>
+</body>
+</html>

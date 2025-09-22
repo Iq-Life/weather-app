@@ -15,11 +15,12 @@ type WeatherData struct {
 	} `json:"main"`
 	Weather []struct {
 		Description string `json:"description"`
+		Icon        string `json:"icon"`
 	} `json:"weather"`
 }
 
 func getWeatherData(city string, apiKey string) (*WeatherData, error) {
-	url := fmt.Sprintf("http://api.openweathermap.org/data/2.5/weather?q=%s&appid=%s&units=metric", city, apiKey)
+	url := fmt.Sprintf("http://api.openweathermap.org/data/2.5/weather?q=%s&appid=%s&units=metric&lang=ru", city, apiKey)
 
 	resp, err := http.Get(url)
 	if err != nil {
