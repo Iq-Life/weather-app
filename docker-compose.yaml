@@ -1,0 +1,12 @@
+services:
+  myapp:
+    build:
+      dockerfile: Dockerfile
+    container_name: myapp-container
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env  # опционально, если нужны переменные из файла
+    volumes:
+      - ./config:/app/config:ro  # монтирование конфигов для разработки
+      - ./templates:/app/templates:ro
